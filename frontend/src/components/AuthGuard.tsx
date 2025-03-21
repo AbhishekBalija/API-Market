@@ -13,11 +13,9 @@ export default function AuthGuard({ children, allowedRoles }: AuthGuardProps) {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
-    
-    console.log('AuthGuard Check:', { token: !!token, user });
+
 
     if (!token) {
-      console.log('No token found, redirecting to login');
       navigate('/login');
       return;
     }
@@ -25,12 +23,8 @@ export default function AuthGuard({ children, allowedRoles }: AuthGuardProps) {
     if (allowedRoles && user) {
       try {
         const userData = JSON.parse(user);
-        console.log('User data:', userData);
-        console.log('Allowed roles:', allowedRoles);
-        console.log('User account type:', userData.accountType);
 
         if (!allowedRoles.includes(userData.accountType)) {
-          console.log('User role not authorized');
           navigate('/');
           return;
         }

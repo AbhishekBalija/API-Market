@@ -5,13 +5,28 @@ import { Code, Users, Database, BarChart } from 'lucide-react';
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState<any>(null);
+  const [userCount, setUserCount] = useState<number>(0);
+
+  const fetchUserCount = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3000/api/users/count',{
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      if(data.success){
+        setUserCount(data.data.usersCount);
+      }
+    } catch (error) {
+      console.error("Error fetching user count:", error);
+    }
+  }
 
   useEffect(() => {
-    // Debug information
-    console.log("AdminDashboard mounted");
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
-    console.log("Token exists:", !!token);
     
     if (!token) {
       // Redirect to login if no token exists
@@ -19,11 +34,13 @@ const AdminDashboard = () => {
       return;
     }
     
+    // Fetch user count regardless of user data
+    fetchUserCount();
+    
     if (user && user !== 'undefined') {
       try {
         const parsedUser = JSON.parse(user);
         setUserData(parsedUser);
-        console.log('Admin user data:', parsedUser);
       } catch (error) {
         console.error("Error parsing user data:", error);
         // Handle invalid JSON by setting default admin data
@@ -78,7 +95,7 @@ const AdminDashboard = () => {
               <Users className="h-5 w-5 text-primary" />
               <h2 className="text-xl font-semibold">Total Users</h2>
             </div>
-            <p className="text-3xl font-bold">0</p>
+            <p className="text-3xl font-bold">{userCount}</p>
           </div>
           
           <div className="rounded-lg border bg-card p-6">

@@ -48,7 +48,14 @@ const loginUser = async (userData) => {
     throw new Error('Invalid email or password');
 };
 
+// Users count service logic
+const getUsersCount = async () => {
+    const count = await User.countDocuments();
+    return count;
+};
+
 module.exports = {
     createUser,
-    loginUser
+    loginUser,
+    getUsersCount
 };

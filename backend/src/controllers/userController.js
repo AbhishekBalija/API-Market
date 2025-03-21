@@ -75,8 +75,18 @@ const adminLogin = async (req, res) => {
     }
   };
 
+// Users count controller
+const getUsersCount = async (req, res) => {
+    try {
+        const usersCount = await userService.getUsersCount();
+        return successResponse(res, { usersCount });
+    } catch (error) {
+        return errorResponse(res, error.message, 500);
+    }
+};
 module.exports = {
     registerUser,
     loginUser,
-    adminLogin
+    adminLogin,
+    getUsersCount,
 };
